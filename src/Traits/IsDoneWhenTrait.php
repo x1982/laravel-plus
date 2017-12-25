@@ -1,5 +1,5 @@
 <?php
-namespace Landers\LaravelAms\Traits;
+namespace Landers\LaravelPlus\Traits;
 
 use Illuminate\Support\Facades\Cache;
 
