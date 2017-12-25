@@ -10,7 +10,7 @@
         "landers/php-substrate": "dev-master"
     },
     "requireX": {
-        "laravel/framework": "5.5.*",
+        "laravel/framework": "5.5.*"
     },
     "authors": [
         {
