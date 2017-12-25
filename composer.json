@@ -11,7 +11,6 @@
     },
     "requireX": {
         "laravel/framework": "5.5.*",
-        "landers/php-substrate": "dev-master"
     },
     "authors": [
         {
@@ -29,7 +28,13 @@
             "Landers\\LaravelPlus\\": "src"
         }
     },
-    "repositories": {
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://git.ulan.io/landers/php-substrate.git"
+        }
+    ],
+    "repositoriesX": {
         "landers/php-substrate": {
             "type": "git",
             "url": "https://git.ulan.io/landers/php-substrate.git"
