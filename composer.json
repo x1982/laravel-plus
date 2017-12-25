@@ -31,5 +31,6 @@
             "type": "vcs",
             "url": "https://git.ulan.io/landers/php-substrate.git"
         }
-    }
+    },
+    "minimum-stability": "stable"
 }
