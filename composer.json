@@ -30,10 +30,6 @@
         "landers/php-substrate": {
             "type": "vcs",
             "url": "https://git.ulan.io/landers/php-substrate.git"
-        },
-        "packagist": {
-            "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
         }
     }
 }
