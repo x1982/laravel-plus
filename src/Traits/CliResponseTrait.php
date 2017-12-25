@@ -46,7 +46,7 @@ Trait CliResponseTrait
                     $app_name = strtolower(str_replace([':', '\\'], ['-', ''], Str::snake(static::class)));
                     $today = date('Y-m-d');
                     $filename = storage_path("logs/cli/{$today}/{$app_name}.log");
-                    app(Filesystem::class)->put($filename, $content, FILE_APPEND);
+                    app(Filesystem::class)->append($filename, $content, FILE_APPEND);
                 }
             }
         ]);

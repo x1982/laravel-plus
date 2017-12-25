@@ -7,7 +7,7 @@
     "homepage": "http://x1982.com",
     "require": {
         "php": ">=7.0",
-        //"landers/php-substrate": "dev-master",
+        "landers/php-substrate": "dev-master",
         "laravel/framework": "5.5.*"
     },
     "authors": [
@@ -24,6 +24,16 @@
         ],
         "psr-4": {
             "Landers\\LaravelPlus\\": "src"
+        }
+    },
+    "repositories": {
+        "landers/php-substrate": {
+            "type": "vcs",
+            "url": "https://git.ulan.io/landers/php-substrate.git"
+        },
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
         }
     }
 }
