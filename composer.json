@@ -7,7 +7,7 @@
     "homepage": "http://x1982.com",
     "require": {
         "php": ">=7.0.0",
-        "landers/php-substrate": "dev-master"
+        "landers/php-substrate": "^0.1.0"
     },
     "authors": [
         {
@@ -28,8 +28,6 @@
     "repositories": {
 
     },
-    "minimum-stability": "dev",
-    "prefer-stable" : true,
     "extra": {
 
     }
