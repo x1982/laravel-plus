@@ -6,11 +6,8 @@
     "license": "MIT",
     "homepage": "http://x1982.com",
     "require": {
-        "php": ">=7.0.0"
-    },
-    "requireX": {
-        "laravel/framework": "5.5.*",
-        "landers/php-substrate": "dev-master"
+        "php": ">=7.0.0",
+        "landers/php-substrate": "0.1.*"
     },
     "authors": [
         {
@@ -28,21 +25,10 @@
             "Landers\\LaravelPlus\\": "src"
         }
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://git.ulan.io/landers/php-substrate.git"
-        }
-    ],
-    "repositoriesX": {
-        "landers/php-substrate": {
-            "type": "git",
-            "url": "https://git.ulan.io/landers/php-substrate.git"
-        },
-        "packagist": {
-            "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
-        }
+    "repositories": {
+
     },
-    "minimum-stability": "dev"
+    "extra": {
+
+    }
 }
