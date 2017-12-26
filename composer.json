@@ -28,6 +28,8 @@
     "repositories": {
 
     },
+    "minimum-stability": "dev",
+    "prefer-stable" : true,
     "extra": {
         "landers/laravel-substrate": {
             "dev-master": "0.1.x-dev"
