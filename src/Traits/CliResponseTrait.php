@@ -1,10 +1,7 @@
 <?php
 namespace Landers\LaravelPlus\Traits;
 
-use Illuminate\Support\Str;
-use Landers\LaravelPlus\Utils\Filesystem;
 use Landers\Substrate2\Classes\CliResponse;
-
 
 Trait CliResponseTrait
 {
@@ -27,26 +24,8 @@ Trait CliResponseTrait
         $this->response = new CliResponse();
         $this->response->clear()->setOptions([
             'report' => function($data) {
-                // 日志内容
-                $content = implode("\n", $data) . str_repeat(PHP_EOL, 3);
-                $canReport = false;
-
-                //上报日志
-                if ( function_exists('dispatch_logger')) {
-                    dispatch_logger($content);
-                    $canReport = true;
-                }
-
                 if (method_exists($this, 'reportLog')) {
-                    $this->reportLog($content);
-                    $canReport = true;
-                }
-
-                if ( !$canReport ) {
-                    $app_name = strtolower(str_replace([':', '\\'], ['-', ''], Str::snake(static::class)));
-                    $today = date('Y-m-d');
-                    $filename = storage_path("logs/cli/{$today}/{$app_name}.log");
-                    app(Filesystem::class)->append($filename, $content, FILE_APPEND);
+                    $this->reportLog($data);
                 }
             }
         ]);
