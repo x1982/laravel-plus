@@ -25,6 +25,7 @@ Trait CliResponseTrait
         $this->response->clear()->setOptions([
             'report' => function($data) {
                 if (method_exists($this, 'reportLog')) {
+                    $data = array_merge($data, ["\n", "\n", "\n"]);
                     $this->reportLog($data);
                 }
             }
