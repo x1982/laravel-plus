@@ -198,3 +198,20 @@ function read_config( string $key = '', $default = null )
         return include($file);
     }
 }
+
+/**
+ * 监听Sql
+ */
+function listen_sql(\Closure $callback)
+{
+    app('db')->listen(function ($event) use ($callback) {
+        $sql = $event->sql;
+        $time = $event->time;
+        $bindings = $event->bindings;
+        if (strpos($sql, "?") !== false) {
+            array_unshift($bindings, str_replace(["%", "?"], ["%%", "'%s'"], $sql));
+            $sql = call_user_func_array("sprintf", $bindings);
+        }
+        $callback($sql, $time);
+    });
+}
