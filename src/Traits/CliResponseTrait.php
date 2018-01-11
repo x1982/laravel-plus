@@ -20,8 +20,10 @@ Trait CliResponseTrait
      * 初始化 response
      * @return CliResponse
      */
-    private function initResponse() {
-        if ($this->response) return;
+    public function initResponse() {
+        if ($this->response) {
+            return $this->response;
+        }
         $this->response = new CliResponse();
         return $this->response->clear()->setOptions([
             'report' => function($data) {
