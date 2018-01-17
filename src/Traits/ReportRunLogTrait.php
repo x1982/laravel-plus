@@ -43,11 +43,11 @@ trait ReportRunLogTrait
     private function getReportWays()
     {
         if ( method_exists($this,'reportWays') ) {
-            return $this->reportWays();
+            return (array)$this->reportWays();
         }
 
         if ( $this->reportWays ) {
-            return $this->reportWays;
+            return (array)$this->reportWays;
         }
 
         return [];
