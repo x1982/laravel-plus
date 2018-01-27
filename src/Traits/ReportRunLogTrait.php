@@ -23,7 +23,9 @@ trait ReportRunLogTrait
             try {
                 switch ($type) {
                     case 'FUNCTION':
-                        $way($data);
+                        if ( function_exists($way) ){
+                            $way($data);
+                        }
                         break;
 
                     case 'LOCAL_FILE':
