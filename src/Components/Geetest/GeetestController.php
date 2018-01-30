@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Landers\LaravelAms\Constraints\Controllers\BaseController;
 use Landers\LaravelPlus\Facades\Cache;
 
-class GeetController extends BaseController
+class GeetestController extends BaseController
 {
     /**
      * 取得geetest验证码

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
  *
  * @author Tanxu
  */
-class GeetService
+class GeetestService
 {
     const GT_SDK_VERSION = 'php_3.2.0';
 
