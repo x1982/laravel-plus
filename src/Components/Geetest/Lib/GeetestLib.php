@@ -1,16 +1,11 @@
 <?php
-namespace Landers\LaravelPlus\Components\Geetest;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * 极验行为式验证安全平台，php 网站主后台包含的库文件
  *
  * @author Tanxu
  */
-class GeetestService
-{
+class GeetestLib {
     const GT_SDK_VERSION = 'php_3.2.0';
 
     public static $connectTimeout = 1;
@@ -18,12 +13,9 @@ class GeetestService
 
     private $response;
 
-    public function config($captcha_id, $private_key)
-    {
+    public function __construct($captcha_id, $private_key) {
         $this->captcha_id  = $captcha_id;
         $this->private_key = $private_key;
-
-        return $this;
     }
 
     /**
@@ -32,8 +24,7 @@ class GeetestService
      * @param null $user_id
      * @return int
      */
-    public function pre_process($user_id = null)
-    {
+    public function pre_process($user_id = null) {
         $url = "http://api.geetest.com/register.php?gt=" . $this->captcha_id;
         if (($user_id != null) and (is_string($user_id))) {
             $url = $url . "&user_id=" . $user_id;
@@ -53,8 +44,7 @@ class GeetestService
     /**
      * @param $challenge
      */
-    private function success_process($challenge)
-    {
+    private function success_process($challenge) {
         $challenge      = md5($challenge . $this->private_key);
         $result         = array(
             'success'   => 1,
@@ -67,8 +57,7 @@ class GeetestService
     /**
      *
      */
-    private function failback_process()
-    {
+    private function failback_process() {
         $rnd1           = md5(rand(0, 100));
         $rnd2           = md5(rand(0, 100));
         $challenge      = $rnd1 . substr($rnd2, 0, 2);
@@ -83,8 +72,7 @@ class GeetestService
     /**
      * @return mixed
      */
-    public function get_response_str()
-    {
+    public function get_response_str() {
         return json_encode($this->response);
     }
 
@@ -93,8 +81,7 @@ class GeetestService
      *
      * @return mixed
      */
-    public function get_response()
-    {
+    public function get_response() {
         return $this->response;
     }
 
@@ -107,9 +94,8 @@ class GeetestService
      * @param null $user_id
      * @return int
      */
-    public function success_validate($challenge, $validate, $seccode, $user_id = null)
-    {
-        if (! $this->check_validate($challenge, $validate)) {
+    public function success_validate($challenge, $validate, $seccode, $user_id = null) {
+        if (!$this->check_validate($challenge, $validate)) {
             return 0;
         }
         $data = array(
@@ -140,8 +126,7 @@ class GeetestService
      * @param $seccode
      * @return int
      */
-    public function fail_validate($challenge, $validate, $seccode)
-    {
+    public function fail_validate($challenge, $validate, $seccode) {
         if ($validate) {
             $value   = explode("_", $validate);
             $ans     = $this->decode_response($challenge, $value['0']);
@@ -165,8 +150,7 @@ class GeetestService
      * @param $validate
      * @return bool
      */
-    private function check_validate($challenge, $validate)
-    {
+    private function check_validate($challenge, $validate) {
         if (strlen($validate) != 32) {
             return false;
         }
@@ -183,8 +167,7 @@ class GeetestService
      * @param $url
      * @return mixed|string
      */
-    private function send_request($url)
-    {
+    private function send_request($url) {
 
         if (function_exists('curl_exec')) {
 
@@ -222,9 +205,8 @@ class GeetestService
      * @param array $postdata
      * @return mixed|string
      */
-    private function post_request($url, $postdata = '')
-    {
-        if (! $postdata) {
+    private function post_request($url, $postdata = '') {
+        if (!$postdata) {
             return false;
         }
 
@@ -237,7 +219,7 @@ class GeetestService
             curl_setopt($ch, CURLOPT_TIMEOUT, self::$socketTimeout);
 
             //不可能执行到的代码
-            if (! $postdata) {
+            if (!$postdata) {
                 curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
             } else {
                 curl_setopt($ch, CURLOPT_POST, 1);
@@ -277,8 +259,7 @@ class GeetestService
      * @param $string
      * @return int
      */
-    private function decode_response($challenge, $string)
-    {
+    private function decode_response($challenge, $string) {
         if (strlen($string) > 100) {
             return 0;
         }
@@ -314,8 +295,7 @@ class GeetestService
      * @param $x_str
      * @return int
      */
-    private function get_x_pos_from_str($x_str)
-    {
+    private function get_x_pos_from_str($x_str) {
         if (strlen($x_str) != 5) {
             return 0;
         }
@@ -333,8 +313,7 @@ class GeetestService
      * @param $img_grp_index
      * @return int
      */
-    private function get_failback_pic_ans($full_bg_index, $img_grp_index)
-    {
+    private function get_failback_pic_ans($full_bg_index, $img_grp_index) {
         $full_bg_name = substr(md5($full_bg_index), 0, 9);
         $bg_name      = substr(md5($img_grp_index), 10, 9);
 
@@ -359,8 +338,7 @@ class GeetestService
      * @param $challenge
      * @return mixed
      */
-    private function decodeRandBase($challenge)
-    {
+    private function decodeRandBase($challenge) {
         $base      = substr($challenge, 32, 2);
         $tempArray = array();
         for ($i = 0; $i < strlen($base); $i++) {
@@ -376,62 +354,7 @@ class GeetestService
     /**
      * @param $err
      */
-    private function triggerError($err)
-    {
-        //trigger_error($err);
+    private function triggerError($err) {
+        trigger_error($err);
     }
-
-    /**
-     * 验证验证码
-     *
-     * @param Request $request
-     * @param $message 验证错误信息
-     * @param $error_key 用于表单验证：错误信息的键
-     * @return bool
-     * @throws \Exception
-     */
-    public static function verifyCaptcha(Request $request, $message, $error_key)
-    {
-        if ($message === true) {
-            $message = '滑块验证失效，请重新刷新滑块验证！';
-        }
-        $challenge = $request->input('geetest_challenge');
-        $validate  = $request->input('geetest_validate');
-        $seccode   = $request->input('geetest_seccode');
-
-        $captcha = new self();
-        $captcha->config(config('geetest.CAPTCHA_ID'), config('geetest.PRIVATE_KEY'));
-        //if (Redis::get('gtserver') == 1) {
-
-        if ((int)Cache::get('gtserver') === 1) {
-            $result = $captcha->success_validate($challenge, $validate, $seccode);
-            if (! $result) {
-                if ($message) {
-                    if ($error_key) {
-                        self::throwValidationException([$error_key => $message]);
-                    } else {
-                        self::throwGeneralException($message);
-                    }
-                }
-
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            $result = $captcha->fail_validate($challenge, $validate, $seccode);
-            if (! $result) {
-                if ($error_key) {
-                    self::throwValidationException([$error_key => $message]);
-                } else {
-                    self::throwGeneralException($message);
-                }
-
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
 }
