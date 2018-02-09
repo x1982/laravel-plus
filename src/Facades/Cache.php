@@ -7,6 +7,12 @@ class Cache extends LaravelCache
 {
     private static $verification_prefix_key = 'cache_verification';
 
+    /**
+     * 作比较
+     * @param $cache_key
+     * @param $value
+     * @return bool
+     */
     public static function compare( $cache_key, $value )
     {
         $cache_value = parent::get($cache_key);
