@@ -125,7 +125,7 @@ class ResourceFetchService
                 unset($paths[$i]);
             }
 
-            $item = $this->cutQuery($item);
+            //$item = $this->cutQuery($item);
         }
         $paths = array_values($paths);
         $paths = array_unique($paths);
@@ -247,7 +247,7 @@ class ResourceFetchService
     /**
      * 保存首页
      * @param $replaces
-     * @return bool
+     * @return array
      * @throws \Exception
      */
     public function saveIndex(array $replaces)
@@ -256,8 +256,6 @@ class ResourceFetchService
             return $item['local_url'];
         }, $replaces);
 
-        //$debug = $this->indexFile === 'global.css';
-
         if ($this->indexFile) {
             $content = strtr($this->content, $replaces);
             $file = Path::join($this->docPath, $this->rootPath, $this->savePath, $this->indexFile);
@@ -265,11 +263,12 @@ class ResourceFetchService
             if (!$this->fso()->put($file, $content)) {
                 throw new \Exception("写入首页文件{$file}失败");
             } else {
-                return Path::toUrl($file, $this->docPath);
+                return [
+                    'url' => Path::toUrl($file, $this->docPath),
+                    'file' => $file,
+                ];
             }
         }
-
-        return true;
     }
 
     /**
@@ -350,7 +349,7 @@ class ResourceFetchService
             //dp($replaces, 0);
 
             //获取远程内容并保存
-            // if ( is_file($local_path) ) continue;
+            if (is_file($local_path)) continue;
             if ($content = $this->requestGet($remote_url)) {
                 if (!preg_match('/404 Not Found/', $content)) {
                     if (!$this->fso()->put($local_path, $content)) {
