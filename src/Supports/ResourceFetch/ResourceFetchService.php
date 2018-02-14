@@ -25,23 +25,22 @@ class ResourceFetchService
     private $docPath;
 
     // 本次抓取存放的根目录
-    private $rootPath;
+    private $rootDir;
 
     // 资源的保存路径
-    private $savePath;
+    private $saveDir;
 
     // 生成的页面文件
     private $indexFile;
 
-    function __construct($url, $doc_path, $root_path = '', $save_path = '', $index_file = null)
+    function __construct($url, $doc_path, $root_dir = '', $save_dir = '', $index_file = null)
     {
         $this->url = Url::stripRelative($url);
         $this->urlInfo = Url::parse($this->url);
 
         $this->docPath = Path::rtrimSeparator($doc_path);
-        $root_path = $root_path ?: Path::join('vendor', $this->urlInfo['host']);
-        $this->rootPath = Path::trimSeparator($root_path);
-        $this->savePath = $save_path ? Path::trimSeparator($save_path) : '.';
+        $this->rootDir = Path::trimSeparator($root_dir);
+        $this->saveDir = $save_dir ? Path::trimSeparator($save_dir) : '.';
         $this->indexFile = $index_file ?: 'index.html';
 
         $this->content = $this->getContent($this->url);
@@ -198,12 +197,12 @@ class ResourceFetchService
         foreach ($replaces as $item) {
             $local_path = $item['local_path'];
             $remote_url = $item['remote_url'];
-            $file_name = str_replace(Path::join($this->docPath, $this->rootPath), '', $local_path);
+            $file_name = str_replace(Path::join($this->docPath, $this->rootDir), '', $local_path);
 
             $dirname = pathinfo($file_name, PATHINFO_DIRNAME);
             $basename = pathinfo($file_name, PATHINFO_BASENAME);
 
-            $self = new self($remote_url, $this->docPath, $this->rootPath, $dirname, $basename);
+            $self = new self($remote_url, $this->docPath, $this->rootDir, $dirname, $basename);
             $replaces_paths = $self->fetchUrl();
             $self->saveIndex($replaces_paths);
         }
@@ -258,7 +257,7 @@ class ResourceFetchService
 
         if ($this->indexFile) {
             $content = strtr($this->content, $replaces);
-            $file = Path::join($this->docPath, $this->rootPath, $this->savePath, $this->indexFile);
+            $file = Path::join($this->docPath, $this->rootDir, $this->saveDir, $this->indexFile);
 
             if (!$this->fso()->put($file, $content)) {
                 throw new \Exception("写入首页文件{$file}失败");
@@ -283,11 +282,11 @@ class ResourceFetchService
         if (Path::isAbsolute($filename)) {
             $path = $filename;
         } else {
-            $path = Path::join($this->savePath, $filename);
+            $path = Path::join($this->saveDir, $filename);
             $path = Path::stripRelative($path);
         }
-        $path = Path::join($this->docPath, $this->rootPath, $path);
-        //if ($debug) dp([$this->docPath, $this->rootPath, $path]);
+        $path = Path::join($this->docPath, $this->rootDir, $path);
+        //if ($debug) dp([$this->docPath, $this->rootDir, $path]);
 
         return $path;
     }

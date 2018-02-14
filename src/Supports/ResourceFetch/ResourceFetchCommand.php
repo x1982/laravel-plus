@@ -30,10 +30,11 @@ class ResourceFetchCommand extends BaseCommand
         $remote_url = $this->argument('url');
         $doc_path = myams_guard_path('internet');
 
-        $this->response->note('正在抓取面页及资源中...');
-        //$save_path = $this->option('dir');
+        $root_dir = $this->option('dir') or $root_dir = 'main';
+        $root_dir = 'vendor' . '/' . $root_dir;
 
-        $resource_fetcher = new ResourceFetchService($remote_url, $doc_path);
+        $this->response->note('正在抓取面页及资源中...');
+        $resource_fetcher = new ResourceFetchService($remote_url, $doc_path, $root_dir);
 
         if ( $result = $resource_fetcher->fetchAll() ) {
             $this->response->echoSuccess();
