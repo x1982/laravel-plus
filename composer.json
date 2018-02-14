@@ -7,6 +7,7 @@
     "homepage": "http://x1982.com",
     "require": {
         "php": ">=7.0.0",
+        "guzzlehttp/guzzle": "^6.3",
         "landers/php-substrate": "^0.1.0"
     },
     "authors": [
