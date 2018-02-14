@@ -13,7 +13,7 @@ trait FsoTrait
 
     /**
      * 从容器对象中取得fso对象
-     * @return \Illuminate\Foundation\Application|mixed
+     * @return Filesystem
      */
     private function fso()
     {
