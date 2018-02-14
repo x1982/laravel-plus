@@ -15,7 +15,8 @@ class ResourceFetchCommand extends BaseCommand
      * @var string
      */
     protected $signature = 'plus:fetch-remote
-                            {url : 远程地址}';
+                            {url : 远程地址}
+                            {--dir= : 保存在vendor下的子目录名}';
 
     /**
      * The console command description.
@@ -29,16 +30,9 @@ class ResourceFetchCommand extends BaseCommand
         $remote_url = $this->argument('url');
         $doc_path = myams_guard_path('internet');
 
-        //$result = [
-        //    'url' => '/vendor/www.niaoyun.com/index.html',
-        //    'file' => '/Users/landers/Archives/Projects/ulan/StopDDoS/OfficialWebsite_v2/public/internet/vendor/www.niaoyun.com/index.html',
-        //];
-        //
-        //$blade_key = $this->buildBlade($remote_url, $result);
-        //$this->buildRoute($remote_url, $blade_key);
-        //pause();
-
         $this->response->note('正在抓取面页及资源中...');
+        //$save_path = $this->option('dir');
+
         $resource_fetcher = new ResourceFetchService($remote_url, $doc_path);
 
         if ( $result = $resource_fetcher->fetchAll() ) {
@@ -61,6 +55,7 @@ class ResourceFetchCommand extends BaseCommand
         // 确定blade目标文件名
         $remote_path = pathinfo(parse_url($remote_url, PHP_URL_PATH), PATHINFO_FILENAME);
         $blade_key = str_replace('/', '_', trim($remote_path, '/')) ;
+        $blade_key = $blade_key ?: 'index';
         $dist_file = $blade_key . '.blade.php';
         $dist_file = resource_path("views/{$view_sub_path}/{$dist_file}");
 
@@ -74,14 +69,10 @@ class ResourceFetchCommand extends BaseCommand
     protected function buildRoute($remote_url, $blade_key)
     {
         // 确定路由路径
-        $remote_path = rtrim(parse_url($remote_url, PHP_URL_PATH), '/');
-        $p = pathinfo($remote_path);
-        $dirname = array_get($p, 'dirname', '');
-        $filename = array_get($p, 'filename', '');
-        $route_path = Path::rtrimSeparator($dirname) . Path::leftSeparator($filename);
+        $route_path = rtrim(parse_url($remote_url, PHP_URL_PATH), '/');
 
         // 确定路由内容
-        $template = $this->fso()->get(__DIR__ . 'route.template');
+        $template = $this->fso()->get(__DIR__ . '/route.template');
         $route_content = Str::replace($template, [
             'path' => $route_path,
             'blade' => $blade_key,
