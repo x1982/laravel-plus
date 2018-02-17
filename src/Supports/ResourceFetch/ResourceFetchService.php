@@ -120,7 +120,7 @@ class ResourceFetchService
                 unset($paths[$i]);
             }
 
-            if (preg_match('/^data:image(.*)/i', $item)) {
+            if (preg_match('/^data:(.*)/i', $item)) {
                 unset($paths[$i]);
             }
 
