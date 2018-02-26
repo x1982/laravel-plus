@@ -25,6 +25,7 @@ class ResourceFetchCommand extends BaseCommand
      */
     protected $description = '抓取远程资源';
 
+
     protected function handleMain()
     {
         $remote_url = $this->argument('url');
@@ -46,6 +47,12 @@ class ResourceFetchCommand extends BaseCommand
         }
     }
 
+    /**
+     * 生成 blade 模板
+     * @param $remote_url
+     * @param $result
+     * @return string
+     */
     protected function buildBlade($remote_url, $result)
     {
         $view_sub_path = 'internet';
@@ -67,6 +74,12 @@ class ResourceFetchCommand extends BaseCommand
         return "{$view_sub_path}.{$blade_key}";
     }
 
+    /**
+     * 生成路由
+     * @param $remote_url
+     * @param $blade_key
+     * @return string
+     */
     protected function buildRoute($remote_url, $blade_key)
     {
         // 确定路由路径

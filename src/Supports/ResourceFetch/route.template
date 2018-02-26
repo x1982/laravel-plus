@@ -1,3 +1,1 @@
-Route::get('{{$path}}', function () {
-    return myams_view('{{$blade}}');
-});
+Route::blade('{{$path}}', '{{$blade}}');
