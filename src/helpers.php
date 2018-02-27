@@ -26,6 +26,16 @@ function extract_module_name($class_name)
     }
 }
 
+/**
+ * 从完整命名空间的类名中取得纯类名
+ */
+function get_pure_class(string $classname)
+{
+    $p = strrpos($classname, '\\');
+    $p = $p === false ? 0 : $p + 1;
+    return substr($classname, $p);
+}
+
 if (!function_exists('instantiate_api_result')) {
     function instantiate_api_result($args = NULL) {
         $class = \Landers\Substrate2\Classes\ApiResult::class;
