@@ -6,6 +6,9 @@ use Landers\Substrate2\Classes\Http;
 
 trait HttpRequestTrait
 {
+    /**
+     * @var Http
+     */
     private $httpClient;
 
     /**
@@ -49,7 +52,12 @@ trait HttpRequestTrait
         return $cookies;
     }
 
-    private function requestGet( $url, array $params = [])
+    /**
+     * @param string $url
+     * @param array $params
+     * @return bool
+     */
+    private function requestGet( string $url, array $params = [])
     {
         $cookies = $this->getCacheCookie();
         $this->httpClient()->withCookies($cookies)->get($url, $params);
@@ -58,6 +66,48 @@ trait HttpRequestTrait
         }
 
         return $this->httpClient->contents();
+    }
+
+    /**
+     * @param string $url
+     * @param array $data
+     * @return bool
+     */
+    private function requestPost(string $url, array $data = [])
+    {
+        $cookies = $this->getCacheCookie();
+        $this->httpClient()->withCookies($cookies)->post($url, $data);
+        if ( !$this->httpClient->success() ) {
+            return false;
+        }
+
+        return $this->httpClient->contents();
+    }
+
+    /**
+     * @param string $url
+     * @param array $data
+     * @return bool
+     */
+    private function requestPostJson(string $url, array $data = [])
+    {
+        $cookies = $this->getCacheCookie();
+        $this->httpClient()->withCookies($cookies)->postJson($url, $data);
+        if ( !$this->httpClient->success() ) {
+            return false;
+        }
+
+        return $this->httpClient->contents();
+    }
+
+    /**
+     * @param bool $bool
+     * @return $this
+     */
+    private function requestDebug(bool $bool = true)
+    {
+        $this->httpClient()->debug($bool);
+        return $this;
     }
 
     /**
