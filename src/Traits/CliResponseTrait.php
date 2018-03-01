@@ -1,6 +1,7 @@
 <?php
 namespace Landers\LaravelPlus\Traits;
 
+use Illuminate\Support\Str;
 use Landers\Substrate2\Classes\CliResponse;
 
 Trait CliResponseTrait
@@ -49,6 +50,8 @@ Trait CliResponseTrait
     {
         $this->initResponse();
         $job_name = $this->getJobName();
+        $job_type = $this->getJobType();
+        $job_name = $job_type ? "{$job_type}: {$job_name}" : $job_name;
 
         $msg = "【{$job_name}】启动工作";
         $this->response->start($msg);
@@ -80,5 +83,23 @@ Trait CliResponseTrait
         }
 
         return static::class;
+    }
+
+    /**
+     * 取得任务类型：Command、Job、Listener
+     * @return string
+     */
+    private function getJobType()
+    {
+        $snake = Str::snake(static::class, '_');
+        $arr = explode('_', $snake);
+        $suffix = last($arr);
+        $types = [
+            'command' => '命令',
+            'job' => '队列任务',
+            'listener' => '监听器'
+        ];
+
+        return array_get($types, $suffix, '');
     }
 }
