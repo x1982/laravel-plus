@@ -30,7 +30,7 @@ trait ReportRunLogTrait
 
                     case 'LOCAL_FILE':
                         $filename = $this->buildLogFilename($way);
-                        app(Filesystem::class)->append($filename, $data, FILE_APPEND);
+                        app(Filesystem::class)->append($filename, $data);
                 }
             } catch (\Exception $e) {
                 // todo 暂未定
