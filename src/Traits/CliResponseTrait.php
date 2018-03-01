@@ -100,6 +100,18 @@ Trait CliResponseTrait
             'listener' => '监听器'
         ];
 
-        return array_get($types, $suffix, '');
+        $type = array_get($types, $suffix);
+        if ( !$type ) {
+            $name = extract_module_name(static::class);
+            $types = [
+                'Commands' => $types['command'],
+                'Jobs' => $types['job'],
+                'Listeners' => $types['listener']
+            ];
+
+            $type = array_get($types, $name);
+        }
+
+        return $type;
     }
 }
