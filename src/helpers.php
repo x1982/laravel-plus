@@ -1,4 +1,14 @@
 <?php
+function is_env_local()
+{
+    return app()->environment() === 'local';
+}
+
+function is_env_production()
+{
+    return app()->environment() === 'production';
+}
+
 /**
  * 从类名中提取命名空间
  */
