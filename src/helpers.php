@@ -46,136 +46,122 @@ function get_pure_class(string $classname)
     return substr($classname, $p);
 }
 
-if (!function_exists('instantiate_api_result')) {
-    function instantiate_api_result($args = NULL) {
-        $class = \Landers\Substrate2\Classes\ApiResult::class;
-        return $args ? $class::makeBy($args) : $class::make();
-    }
-}
-if (!function_exists('build_api_by_result')) {
-    function build_api_by_result($result) {
-        return response()->json($result->toArray(), $result->status_code);
-    }
-}
-if (!function_exists('build_api_result')) {
-    function build_api_result() {
-        $class = \Landers\Substrate2\Classes\ApiResult::class;
-        $result = NULL;
-        if (func_num_args() == 1 ) {
-            $result = func_get_arg(0);
-            if ( !($result instanceof $class) ) {
-                $result = NULL;
-            }
-        }
-        $result or $result = instantiate_api_result(func_get_args());
-        return build_api_by_result($result);
-    }
-}
-if (!function_exists('build_api_invalid')) {
-    function build_api_invalid() {
-        $result = instantiate_api_result()->invalid();
-        return build_api_by_result($result);
-    }
-}
-if (!function_exists('build_api_message')) {
-    function build_api_message($message) {
-        $result = instantiate_api_result()->message($message);
-        return build_api_by_result($result);
-    }
-}
-if (!function_exists('build_api_data')) {
-    function build_api_data($data, $message = null) {
-        $result = instantiate_api_result()->data($data, $message);
-        return build_api_by_result($result);
-    }
-}
-if (!function_exists('build_api_bool')) {
-    function build_api_bool($bool, $message = NULL) {
-        $result = instantiate_api_result()->bool($bool, $message);
-        return build_api_by_result($result);
-    }
-}
-if (!function_exists('build_api_busy')) {
-    function build_api_busy() {
-        $result = instantiate_api_result()->busy();
-        $result->status_code = 500;
-        return build_api_by_result($result);
-    }
-}
-if (!function_exists('build_api_errors')) {
-    function build_api_errors($errors) {
-        $result = instantiate_api_result()->errors($errors);
-        $result->status_code = 500;
-        return build_api_by_result($result);
-    }
-}
-if (!function_exists('output_api_result')) {
-    function output_api_result(){
-        $result = build_api_by_result(func_get_args());
-        $result->output();
-    }
+function instantiate_api_result($args = NULL) {
+    $class = \Landers\Substrate2\Classes\ApiResult::class;
+    return $args ? $class::makeBy($args) : $class::make();
 }
 
-if (!function_exists('build_jsonp_by_result')) {
-    function build_jsonp_by_result($callback, $result) {
-        $status_code = $result->status_code;
-        $result = json_encode($result->toArray(), JSON_UNESCAPED_UNICODE);
-        $result = "$callback('$result');";
-        return response($result, $status_code);
-    }
+function build_api_by_result($result) {
+    return response()->json($result->toArray(), $result->status_code);
 }
-if (!function_exists('build_jsonp_result')) {
-    function build_jsonp_result() {
-        $callback = func_get_arg(0);
-        $args = func_get_args();
-        unset($args[0]); $args = array_values($args);
-        $result = instantiate_api_result($args);
-        return build_jsonp_by_result($callback, $result);
+
+function build_api_result() {
+    $class = \Landers\Substrate2\Classes\ApiResult::class;
+    $result = NULL;
+    if (func_num_args() == 1 ) {
+        $result = func_get_arg(0);
+        if ( !($result instanceof $class) ) {
+            $result = NULL;
+        }
     }
+    $result or $result = instantiate_api_result(func_get_args());
+    return build_api_by_result($result);
 }
-if (!function_exists('build_json_invalid')) {
-    function build_json_invalid($callback) {
-        $result = instantiate_api_result()->invalid();
-        return build_jsonp_by_result($callback, $result);
-    }
+
+function build_api_invalid() {
+    $result = instantiate_api_result()->invalid();
+    return build_api_by_result($result);
 }
-if (!function_exists('build_json_message')) {
-    function build_json_message($callback, $message) {
-        $result = instantiate_api_result()->message($message);
-        return build_jsonp_by_result($callback, $result);
-    }
+
+function build_api_message($message) {
+    $result = instantiate_api_result()->message($message);
+    return build_api_by_result($result);
 }
-if (!function_exists('build_jsonp_bool')) {
-    function build_jsonp_bool($callback, $bool, $message = NULL) {
-        $result = instantiate_api_result()->bool($bool, $message);
-        return build_jsonp_by_result($callback, $result);
-    }
+
+function build_api_data($data, $message = null) {
+    $result = instantiate_api_result()->data($data, $message);
+    return build_api_by_result($result);
 }
-if (!function_exists('build_jsonp_busy')) {
-    function build_jsonp_busy($callback) {
-        $result = instantiate_api_result()->busy();
-        $result->status_code = 500;
-        return build_jsonp_by_result($callback, $result);
-    }
+
+function build_api_bool($bool, $message = NULL) {
+    $result = instantiate_api_result()->bool($bool, $message);
+    return build_api_by_result($result);
 }
-if (!function_exists('build_jsonp_errors')) {
-    function build_jsonp_errors($callback, $errors) {
-        $result = instantiate_api_result()->errors($errors);
-        $result->status_code = 500;
-        return build_jsonp_by_result($callback, $result);
-    }
+
+function build_api_busy() {
+    $result = instantiate_api_result()->busy();
+    $result->status_code = 500;
+    return build_api_by_result($result);
 }
-if (!function_exists('output_jsonp_result')) {
-    function output_jsonp_result(){
-        $class = \Landers\Substrate2\Classes\ApiResult::class;
-        $callback = func_get_arg(0);
-        $args = func_get_args();
-        unset($args[0]); $args = array_values($args);
-        $result = build_api_by_result(func_get_args());
-        $response = build_jsonp_by_result($callback, $result);
-        $response->send();
-        exit();
-    }
+
+function build_api_error($error) {
+    $result = instantiate_api_result()->error($error);
+    $result->status_code = 500;
+    return build_api_by_result($result);
+}
+
+function build_api_errors($errors) {
+    $result = instantiate_api_result()->errors($errors);
+    $result->status_code = 500;
+    return build_api_by_result($result);
+}
+
+function output_api_result(){
+    $result = build_api_by_result(func_get_args());
+    $result->output();
+}
+
+function build_jsonp_by_result($callback, $result) {
+    $status_code = $result->status_code;
+    $result = json_encode($result->toArray(), JSON_UNESCAPED_UNICODE);
+    $result = "$callback('$result');";
+    return response($result, $status_code);
+}
+
+function build_jsonp_result() {
+    $callback = func_get_arg(0);
+    $args = func_get_args();
+    unset($args[0]); $args = array_values($args);
+    $result = instantiate_api_result($args);
+    return build_jsonp_by_result($callback, $result);
+}
+
+function build_json_invalid($callback) {
+    $result = instantiate_api_result()->invalid();
+    return build_jsonp_by_result($callback, $result);
+}
+
+function build_json_message($callback, $message) {
+    $result = instantiate_api_result()->message($message);
+    return build_jsonp_by_result($callback, $result);
+}
+
+function build_jsonp_bool($callback, $bool, $message = NULL) {
+    $result = instantiate_api_result()->bool($bool, $message);
+    return build_jsonp_by_result($callback, $result);
+}
+
+function build_jsonp_busy($callback) {
+    $result = instantiate_api_result()->busy();
+    $result->status_code = 500;
+    return build_jsonp_by_result($callback, $result);
+}
+
+function build_jsonp_errors($callback, $errors) {
+    $result = instantiate_api_result()->errors($errors);
+    $result->status_code = 500;
+    return build_jsonp_by_result($callback, $result);
+}
+
+function output_jsonp_result(){
+    $class = \Landers\Substrate2\Classes\ApiResult::class;
+    $callback = func_get_arg(0);
+    $args = func_get_args();
+    unset($args[0]); $args = array_values($args);
+    $result = build_api_by_result(func_get_args());
+    $response = build_jsonp_by_result($callback, $result);
+    $response->send();
+    exit();
 }
 
 /**
