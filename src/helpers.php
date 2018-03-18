@@ -201,7 +201,12 @@ function read_config( string $key = '', $default = null )
         return config( $key, $default );
     } else {
         $file = base_path('config') . '/' . $key . '.php';
-        return include($file);
+        if (is_file($file)) {
+            $config = include($file);
+        } else {
+            $config = $default;
+        }
+        return $config;
     }
 }
 
