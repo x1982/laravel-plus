@@ -1,14 +1,18 @@
 <?php
 namespace Landers\LaravelPlus;
 
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 
-class BootstrapProvider extends RouteServiceProvider
+class BootstrapProvider extends LaravelServiceProvider
 {
-    public function map()
+    private $providers = [
+
+    ];
+
+    public function boot( )
     {
-        Route::middleware('web')
-            ->group(__DIR__ . '/routes.php');
+        foreach ($this->providers as $item) {
+            $this->app->register($item);
+        }
     }
 }
