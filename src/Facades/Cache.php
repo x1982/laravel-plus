@@ -8,6 +8,16 @@ class Cache extends LaravelCache
     private static $verification_prefix_key = 'cache_verification';
 
     /**
+     * [driver description]
+     * @param  string $driver [description]
+     * @return [type]         [description]
+     */
+    private static function driver(string $driver = 'file')
+    {
+        return parent::store($driver);
+    }
+
+    /**
      * 作比较
      * @param $cache_key
      * @param $value
@@ -15,7 +25,7 @@ class Cache extends LaravelCache
      */
     public static function compare( $cache_key, $value )
     {
-        $cache_value = parent::get($cache_key);
+        $cache_value = self::driver()->get($cache_key);
         if ( !is_null($cache_value) && $cache_value === $value ) {
             return true;
         } else {
@@ -31,7 +41,7 @@ class Cache extends LaravelCache
     public static function getForVerification(string $key)
     {
         $key = self::$verification_prefix_key . '_' . $key;
-        return parent::get($key);
+        return self::driver()->get($key);
     }
 
     /**
@@ -44,7 +54,7 @@ class Cache extends LaravelCache
     public static function putForVerification(string $key, $data, $expireMinute)
     {
         $key = self::$verification_prefix_key . '_' . $key;
-        return parent::set($key, $data, $expireMinute);
+        return self::driver()->set($key, $data, $expireMinute);
     }
 
     /**
@@ -55,7 +65,7 @@ class Cache extends LaravelCache
     public static function forgetForVerification(string $key)
     {
         $key = self::$verification_prefix_key . '_' . $key;
-        return parent::forget($key);
+        return self::driver()->forget($key);
     }
 
     /**
