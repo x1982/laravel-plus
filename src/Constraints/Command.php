@@ -8,7 +8,6 @@ abstract class Command extends LaravelCommand
 {
     protected function checks(string $propmt, array $values)
     {
-        echo PHP_EOL;
         $results = [];
 
         foreach ($values as $value) {
