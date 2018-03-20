@@ -15,7 +15,7 @@ trait FsoTrait
      * 从容器对象中取得fso对象
      * @return Filesystem
      */
-    private function fso()
+    protected function fso()
     {
         if ( !self::$_fso ) {
             self::$_fso = app(Filesystem::class);
