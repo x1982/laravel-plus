@@ -6,6 +6,22 @@ use Illuminate\Console\Command as LaravelCommand;
 
 abstract class Command extends LaravelCommand
 {
+    /**
+     * 是否空
+     * @param $value
+     * @return bool
+     */
+    private function isNull($value)
+    {
+        return is_null($value) || $value === '' || $value === false;
+    }
+
+    /**
+     * 模拟多选
+     * @param string $propmt
+     * @param array $values
+     * @return array
+     */
     protected function checks(string $propmt, array $values)
     {
         $results = [];
@@ -30,8 +46,7 @@ abstract class Command extends LaravelCommand
         if (!$this->input) {
             return $default;
         } else {
-            $ret = parent::option($key);
-            return empty($ret) ? $default : $ret;
+            return parent::option($key);
         }
     }
 
@@ -47,8 +62,7 @@ abstract class Command extends LaravelCommand
         if (!$this->input) {
             return $default;
         } else {
-            $ret = parent::argument($key);
-            return empty($ret) ? $default : $ret;
+            return parent::argument($key);
         }
     }
 
@@ -59,7 +73,7 @@ abstract class Command extends LaravelCommand
     protected function needAsk(\Closure $callback, string $prompt, $default = null)
     {
         $value = $callback();
-        if (is_null($value) || $value === '') {
+        if ($this->isNull($value)) {
             echo PHP_EOL;
             $value = $this->ask($prompt, $default);
         }
@@ -76,7 +90,7 @@ abstract class Command extends LaravelCommand
     protected function needChoice(\Closure $callback, string $prompt, array $values)
     {
         $value = $callback();
-        if (is_null($value) || $value === '') {
+        if ($this->isNull($value)) {
             echo PHP_EOL;
             $value = $this->choice($prompt, $values);
         }
@@ -92,7 +106,7 @@ abstract class Command extends LaravelCommand
     protected function needConfirm(\Closure $callback, string $prompt)
     {
         $value = $callback();
-        if (is_null($value) || $value === '') {
+        if ($this->isNull($value)) {
             echo PHP_EOL;
             $value = $this->confirm($prompt);
         } else {
@@ -104,7 +118,7 @@ abstract class Command extends LaravelCommand
     protected function needChecks(\Closure $callback, string $propmt, array $values)
     {
         $results = $callback();
-        if (is_null($results) || $results === '') {
+        if ($this->isNull($results)) {
             echo PHP_EOL;
             $results = $this->checks($propmt, $values);
         } else {
