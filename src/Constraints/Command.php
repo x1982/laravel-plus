@@ -3,6 +3,7 @@
 namespace Landers\LaravelPlus\Constraints;
 
 use Illuminate\Console\Command as LaravelCommand;
+use Landers\Substrate2\Utils\Str;
 
 abstract class Command extends LaravelCommand
 {
@@ -13,7 +14,7 @@ abstract class Command extends LaravelCommand
      */
     private function isNull($value)
     {
-        return is_null($value) || $value === '' || $value === false;
+        return is_null($value) || $value === '';
     }
 
     /**
@@ -110,7 +111,7 @@ abstract class Command extends LaravelCommand
             echo PHP_EOL;
             $value = $this->confirm($prompt);
         } else {
-            $value = (bool)$value;
+            $value = Str::tryToBool($value);
         }
         return $value;
     }
